@@ -1,0 +1,33 @@
+
+        Address          Assembly          Comment             Machine Code
+
+         0x0           addi x1,x0,2         x1=2                00200093
+         0x4           addi x9,x0,36        x9=36               02400493
+         0x8           lw x15,21(x0)        x15=DM[21]=124      01502783
+         0xC           addi x17,x3,17       x17=17              01118893
+         0x10          xor x22,x9,x1        x22=38              0014CB33
+         0x14          slt x3,x17,x1        x3=0                0018A1B3
+         0x18          sra x4,x9,x1         x4=9                0014D233
+         0x1C          sw x17,8(x1)         DM[10]=17           0110A423
+         0x20          beq x17,x1,branch    not executed        00188863
+         0x24          sub x23,x22,x3       x22=38              403B0BB3
+         0x28          beq,x4,x4,branch     executed            00420463
+         0x2C          or x3,x3,x1          not executed        0011E1B3
+ branch: 0x30          sll x29,x22,x1       x29=152             001B1EB3     // The following 3 instruction to test data forwarding
+         0x34          srai x22,x22,1       x22=19              401B5B13     
+         0x38          slli x12,x22,2       x12=76              002B1613
+         0x3C          sub x5,x12,x22       x5=57               416602B3
+         0x40          jal x6,test1         x6=pc+4=44          00C0036F
+         0x44          addi x5,x5,10        not executed        00A28293
+         0x48          sub x5,x5,x22        not executed        016282B3
+ test1:  0x4C          sltiu x25,x4,-6      x25=0               FFA23C93
+         0x50          beq x25,x0,test2     executed            000C8463
+         0x54          xor x17,x17,x9       not executed        0098C8B3    // The remaining instructions to test lb,lh,lw,sb,sh,sw
+ test2:  0x58          addi x16,x0,4076     x16=4076            FEC00813
+         0x5C          slli,x19,x16,5       x19=(1FD80)hex      00581993  
+         0x60          sb x19,38(x0)        DM[38]=(80)hex      03300323
+         0x64          sh x19,39(x0)        DM[39]=(FD80)hex    033013A3
+         0x68          sw x19,40(x0)        DM[40]=(fffffd80)   03302423
+         0x6C          lb x24,40(x0)        x24=DM[40]=(80)hex  02800C03
+         0x70          lh x25,40(x0)        x25=(FD80)hex       02801C83
+         0x74          lw x26,40(x0)        x26(fffffd80)       02802D03
