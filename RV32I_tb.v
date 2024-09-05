@@ -5,9 +5,8 @@
 module RV32I_tb();
 
 reg clk,rst;
-wire halt;
 
-RV32I DUT(clk,rst,halt);
+RV32I DUT(clk,rst);
 
 initial begin
 	clk=0;
